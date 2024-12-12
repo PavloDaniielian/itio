@@ -18,8 +18,15 @@ class UserController extends Controller
         $formFields = $request->validate([
             'name' => ['required', 'min:3'],
             'email' => ['required', 'email', Rule::unique('users', 'email')],
-            'password' => 'required|confirmed|min:6'
+            'password' => 'required|confirmed|min:6',
+            'avatar' => 'nullable|image|mimes:jpg,png,gif,jpeg|max:2048'
         ]);
+
+        if( $request->hasFile('avatar') ) {
+            $formFields['avatar'] = $request->file('avatar')->store('avatars', 'public');
+        }else{
+            $formFields['avatar'] = null;
+        }
 
         // Hash Password
         $formFields['password'] = bcrypt($formFields['password']);

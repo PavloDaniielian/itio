@@ -1,5 +1,5 @@
 <x-layout>
-  <x-card class="p-10 max-w-lg mx-auto mt-24">
+  <x-card class="p-10 max-w-lg mx-auto">
     <header class="text-center">
       <h2 class="text-2xl font-bold uppercase mb-1">Register</h2>
       <p class="mb-4">Create an account to post gigs</p>
@@ -49,6 +49,14 @@
         @enderror
       </div>
 
+      <label for="avatar-upload" class="inline-block text-lg mb-2">Avatar</label>
+      <div class="mb-6 avatar-preview-container">
+        <input type="file" class="form-control" id="avatar-upload" accept="image/*">
+        <div id="avatar-preview">
+          <img src="" alt="&#13;&#20;Avatar Preview" id="avatar-img" />
+        </div>
+      </div>
+
       <div class="mb-6">
         <button type="submit" class="bg-laravel text-white rounded py-2 px-4 hover:bg-black">
           Sign Up
@@ -64,3 +72,41 @@
     </form>
   </x-card>
 </x-layout>
+
+<style>
+  .avatar-preview-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #avatar-preview {
+    margin-top: 10px;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid #ccc;
+    text-align: center;
+  }
+
+  #avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+</style>
+
+<script>
+  document.getElementById("avatar-upload").addEventListener("change", function(event) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const avatarImg = document.getElementById("avatar-img");
+        avatarImg.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+</script>
