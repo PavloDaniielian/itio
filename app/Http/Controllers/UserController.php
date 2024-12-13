@@ -15,23 +15,34 @@ class UserController extends Controller
 
     // Create New User
     public function store(Request $request) {
-        $formFields = $request->validate([
-            'name' => ['required', 'min:3'],
-            'email' => ['required', 'email', Rule::unique('users', 'email')],
-            'password' => 'required|confirmed|min:6',
-            'avatar' => 'nullable|image|mimes:jpg,png,gif,jpeg|max:2048'
-        ]);
+        \Log::info('Request Input: ' . json_encode($request->all()));
+        
+        try {
+            $formFields = $request->validate([
+                'name' => ['required', 'min:3'],
+                'email' => ['required', 'email', Rule::unique('users', 'email')],
+                'password' => 'required|confirmed|min:6',
+                'avatar' => 'nullable|image|mimes:jpg,png,gif,jpeg|max:2048'
+            ]);
+            \Log::info('Validation successful.');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            \Log::error('Validation failed: ' . json_encode($e->errors()));
+            return back()->withErrors($e->errors())->withInput();
+        }
+        \Log::info('step2');
 
         if( $request->hasFile('avatar') ) {
             $formFields['avatar'] = $request->file('avatar')->store('avatars', 'public');
         }else{
-            $formFields['avatar'] = null;
+            $formFields['avatar'] = 'default-avatar.png';
         }
+        \Log::info('step3');
 
         // Hash Password
         $formFields['password'] = bcrypt($formFields['password']);
 
         // Create User
+        \Log::info('Form Fields: ' . json_encode($formFields));
         $user = User::create($formFields);
 
         // Login

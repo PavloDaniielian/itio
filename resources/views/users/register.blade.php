@@ -5,7 +5,7 @@
       <p class="mb-4">Create an account to post gigs</p>
     </header>
 
-    <form method="POST" action="/users">
+    <form method="POST" action="/users" enctype="multipart/form-data">
       @csrf
       <div class="mb-6">
         <label for="name" class="inline-block text-lg mb-2"> Name </label>
@@ -51,19 +51,23 @@
 
       <label for="avatar-upload" class="inline-block text-lg mb-2">Avatar</label>
       <div class="mb-6 avatar-preview-container">
-        <input type="file" class="form-control" id="avatar-upload" accept="image/*">
+        <input type="file" class="form-control" id="avatar-upload" name="avatar" accept="image/*">
         <div id="avatar-preview">
-          <img src="" alt="&#13;&#20;Avatar Preview" id="avatar-img" />
+          <img src="" alt="Avatar Preview" id="avatar-img" style="display:none;" />
+          <div id="avatar-alt" style="margin-top:20px;">No<BR>Avatar</div>
         </div>
+        @error('avatar')
+        <p class="text-red-500 text-xs mt-1">{{$message}}</p>
+        @enderror
       </div>
 
-      <div class="mb-6">
+      <div class="mb-6 text-center">
         <button type="submit" class="bg-laravel text-white rounded py-2 px-4 hover:bg-black">
           Sign Up
         </button>
       </div>
 
-      <div class="mt-8">
+      <div class="mt-8 text-center">
         <p>
           Already have an account?
           <a href="/login" class="text-laravel">Login</a>
@@ -100,13 +104,23 @@
 <script>
   document.getElementById("avatar-upload").addEventListener("change", function(event) {
     const file = event.target.files[0];
+    const avatarImg = document.getElementById("avatar-img");
+    const avatarAlt = document.getElementById("avatar-alt");
     if (file) {
       const reader = new FileReader();
       reader.onload = function(e) {
         const avatarImg = document.getElementById("avatar-img");
         avatarImg.src = e.target.result;
+        avatarAlt.style.display = "none";
       };
+      avatarImg.style.display = "block";
+      avatarAlt.innerHTML = "<BR>Loading"
+      avatarAlt.style.display = "block";
       reader.readAsDataURL(file);
+    }else{
+      avatarImg.style.display = "none";
+      avatarAlt.innerHTML = "No<BR>Avatar"
+      avatarAlt.style.display = "block";
     }
   });
 </script>
