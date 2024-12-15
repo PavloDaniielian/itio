@@ -29,18 +29,22 @@
             margin: 0;
             overflow: hidden;
         }
+        #sidebar-logo {
+            background-color: #0d0c0f;
+            overflow: auto;
+            width: 45vw;
+            height: 100vh;
+            position: fixed;
+        }
         #sidebar {
-            background-color: #007bff;
-            color: white;
+            background-color: #080829;
             overflow: auto;
             resize: horizontal;
             min-width: 100px;
             max-width: 400px;
-            width: 200px;
+            width: 300px;
             height: 100vh;
             position: fixed;
-            top: 0;
-            left: 0;
         }
         .resizer {
             width: 2px;
@@ -52,33 +56,31 @@
             right: 0;
         }
         .content-wrapper {
-            margin-left: 200px;
+            margin-left: 300px;
             flex: 1;
             display: flex;
             flex-direction: column;
             height: 100vh;
             overflow: hidden;
         }
+        .content-wrapper-logo {
+            margin-left: 45vw;
+        }
         .content {
             flex: 1;
             overflow-y: auto;
-        }
-        footer {
-            background-color: #f8f9fa;
-            text-align: center;
-            padding: 1rem;
         }
     </style>
 </head>
 
 <body>
-    <div id="sidebar" class="bg-primary text-white">
-        <a href="/"><img class="w-24" src="{{asset('images/logo.png')}}" alt="" class="logo" /></a>
+    @auth
+    <div id="sidebar" class="text-white p-6">
+        <div class="text-3xl font-bold uppercase mb-1 text-decoration-underline" style="text-align:left;">IT.IO</div>
         <ul class="flex space-x-6 mr-6 text-lg">
-            @auth
             <li>
                 <span class="font-bold uppercase">
-                Welcome {{auth()->user()->name}}
+                    Welcome {{auth()->user()->name}}
                 </span>
                 <img src="{{ asset('storage/' . Auth::user()->avatar) }}" alt="Avatar" class="rounded-circle" style="width: 40px; height: 40px;">
             </li>
@@ -93,27 +95,27 @@
                 </button>
                 </form>
             </li>
-            @else
-            <li>
-                <a href="/register" class="hover:text-laravel"><i class="fa-solid fa-user-plus"></i> Register</a>
-            </li>
-            <li>
-                <a href="/login" class="hover:text-laravel"><i class="fa-solid fa-arrow-right-to-bracket"></i> Login</a>
-            </li>
-            @endauth
         </ul>
         <div class="resizer" id="resizer"></div>
     </div>
-
     <main>
         <div class="content-wrapper">
+            
+    @else
+    <div id="sidebar-logo" class="text-white p-10">
+        <div class="text-3xl font-bold uppercase mb-1 text-decoration-underline" style="text-align:left;">IT.IO</div>
+        <div style="text-align: -webkit-center;">
+            <img class="mt-8" style="max-height:60vh;" src="images/splash.webp" />
+        </div>
+        <div class="text-2xl text-center mt-8">Post Job! Find Talent!</div>
+        <div class="text-xs text-center mt-8">Copyright &copy; 2022, All Rights reserved</div>
+    </div>
+    <main>
+        <div class="content-wrapper content-wrapper-logo">
+    @endauth
+    
             <div class="content">
                 {{$slot}}
-                
-                <footer>
-                    <p class="ml-2">Copyright &copy; 2022, All Rights reserved</p>
-                    <a href="/listings/create" class="absolute top-1/3 right-10 bg-black text-white py-2 px-5">Post Job</a>
-                </footer>
             </div>
         </div>
     </main>
@@ -125,7 +127,7 @@
     const sidebar = document.getElementById('sidebar');
     const resizer = document.getElementById('resizer');
     const contentWrapper = document.querySelector('.content-wrapper');
-    const footer = document.querySelector('footer');
+    //const footer = document.querySelector('footer');
 
     resizer.addEventListener('mousedown', (event) => {
         event.preventDefault();
@@ -138,7 +140,7 @@
             if (newWidth >= 100 && newWidth <= 400) {
                 sidebar.style.width = `${newWidth}px`;
                 contentWrapper.style.marginLeft = `${newWidth}px`;
-                footer.style.left = `${newWidth}px`;
+                //footer.style.left = `${newWidth}px`;
             }
         };
 

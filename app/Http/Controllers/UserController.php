@@ -15,8 +15,6 @@ class UserController extends Controller
 
     // Create New User
     public function store(Request $request) {
-        \Log::info('Request Input: ' . json_encode($request->all()));
-        
         try {
             $formFields = $request->validate([
                 'name' => ['required', 'min:3'],
@@ -29,20 +27,17 @@ class UserController extends Controller
             \Log::error('Validation failed: ' . json_encode($e->errors()));
             return back()->withErrors($e->errors())->withInput();
         }
-        \Log::info('step2');
-
+        
         if( $request->hasFile('avatar') ) {
             $formFields['avatar'] = $request->file('avatar')->store('avatars', 'public');
         }else{
-            $formFields['avatar'] = 'default-avatar.png';
+            $formFields['avatar'] = 'storage/default-avatar.webp';
         }
-        \Log::info('step3');
-
+        
         // Hash Password
         $formFields['password'] = bcrypt($formFields['password']);
 
         // Create User
-        \Log::info('Form Fields: ' . json_encode($formFields));
         $user = User::create($formFields);
 
         // Login

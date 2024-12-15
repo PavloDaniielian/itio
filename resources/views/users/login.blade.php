@@ -2,7 +2,7 @@
   <x-card class="p-10 max-w-lg mx-auto mt-24">
     <header class="text-center">
       <h2 class="text-2xl font-bold uppercase mb-1">Login</h2>
-      <p class="mb-4">Log into your account to post gigs</p>
+      <p class="mb-4">Log into your account to post jobs or find talents</p>
     </header>
 
     <form method="POST" action="/users/authenticate">
@@ -29,13 +29,13 @@
         @enderror
       </div>
 
-      <div class="mb-6">
+      <div class="mb-6 text-center">
         <button type="submit" class="bg-laravel text-white rounded py-2 px-4 hover:bg-black">
           Sign In
         </button>
       </div>
 
-      <div class="mt-8">
+      <div class="mt-8 text-center">
         <p>
           Don't have an account?
           <a href="/register" class="text-laravel">Register</a>
